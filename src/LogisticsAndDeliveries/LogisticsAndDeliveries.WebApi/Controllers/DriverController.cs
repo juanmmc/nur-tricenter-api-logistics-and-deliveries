@@ -22,6 +22,7 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         [HttpPost("createDriver")]
         public async Task<IActionResult> CreateDriver([FromBody] CreateDriverCommand request)
         {
+            // rol admin
             var result = await _mediator.Send(request);
 
             return result.ToActionResult(this);
@@ -30,6 +31,7 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         [HttpGet("getDriver")]
         public async Task<IActionResult> GetDriver([FromQuery] Guid driverId)
         {
+            // admin , driver
             var result = await _mediator.Send(new GetDriverQuery(driverId));
             return result.ToActionResult(this);
         }

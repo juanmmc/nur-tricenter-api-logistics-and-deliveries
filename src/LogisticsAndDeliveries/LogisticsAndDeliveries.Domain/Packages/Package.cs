@@ -1,7 +1,7 @@
 ﻿using LogisticsAndDeliveries.Core.Abstractions;
 using LogisticsAndDeliveries.Core.Results;
 using LogisticsAndDeliveries.Domain.Drivers;
-using LogisticsAndDeliveries.Domain.Packages.Events;
+using LogisticsAndDeliveries.Domain.Packages.DomainEvents;
 using System.Xml.Linq;
 
 namespace LogisticsAndDeliveries.Domain.Packages
@@ -58,7 +58,7 @@ namespace LogisticsAndDeliveries.Domain.Packages
             {
                 throw new DomainException(PackageErrors.InvalidDeliveryLongitude());
             }
-            if (deliveryDate < DateOnly.FromDateTime(DateTime.UtcNow))
+            if (deliveryDate == DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 throw new DomainException(PackageErrors.InvalidDeliveryDate());
             }
@@ -152,7 +152,7 @@ namespace LogisticsAndDeliveries.Domain.Packages
 
         private void AddStatusChangedDomainEvent()
         {
-            AddDomainEvent(new PackageDeliveryStatusChangedDomainEvent(
+            AddDomainEvent(new PackageDeliveryStatusChanged(
                 Id,
                 DriverId,
                 Number,

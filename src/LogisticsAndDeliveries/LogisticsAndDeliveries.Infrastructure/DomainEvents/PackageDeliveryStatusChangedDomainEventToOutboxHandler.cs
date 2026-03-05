@@ -1,5 +1,5 @@
 using System.Text.Json;
-using LogisticsAndDeliveries.Domain.Packages.Events;
+using LogisticsAndDeliveries.Domain.Packages.DomainEvents;
 using LogisticsAndDeliveries.Infrastructure.Outbox;
 using LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel;
 using MediatR;
@@ -7,7 +7,7 @@ using MediatR;
 namespace LogisticsAndDeliveries.Infrastructure.DomainEvents
 {
     internal sealed class PackageDeliveryStatusChangedDomainEventToOutboxHandler
-        : INotificationHandler<PackageDeliveryStatusChangedDomainEvent>
+        : INotificationHandler<PackageDeliveryStatusChanged>
     {
         private const string PackageDispatchStatusUpdatedEventName = "logistica.paquete.estado-actualizado";
 
@@ -18,7 +18,7 @@ namespace LogisticsAndDeliveries.Infrastructure.DomainEvents
             _dbContext = dbContext;
         }
 
-        public Task Handle(PackageDeliveryStatusChangedDomainEvent notification, CancellationToken cancellationToken)
+        public Task Handle(PackageDeliveryStatusChanged notification, CancellationToken cancellationToken)
         {
             var payload = new
             {
@@ -37,7 +37,7 @@ namespace LogisticsAndDeliveries.Infrastructure.DomainEvents
             {
                 Id = notification.Id,
                 EventName = PackageDispatchStatusUpdatedEventName,
-                Type = notification.GetType().FullName ?? nameof(PackageDeliveryStatusChangedDomainEvent),
+                Type = notification.GetType().FullName ?? nameof(PackageDeliveryStatusChanged),
                 Content = JsonSerializer.Serialize(payload),
                 OccurredOnUtc = notification.OccurredOn.ToUniversalTime()
             };

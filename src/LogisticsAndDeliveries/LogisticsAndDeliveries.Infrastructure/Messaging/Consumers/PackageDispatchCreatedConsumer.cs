@@ -119,8 +119,29 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
             try
             {
                 var raw = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
+                _logger.LogInformation("Mensaje recibido en {Queue}. Body: {Body}", _options.InputQueueName, raw);
                 // var payload = JsonSerializer.Deserialize<PackageDispatchCreatedPayload>(raw, PayloadJsonOptions);
-                var payload = ExtractPayload(raw);
+                var payload = null as PackageDispatchCreatedPayload;
+                try
+                {
+                    /*var eventName = ExtractEventName(raw);
+                    _logger.LogInformation("Evento extraído del mensaje: {Event}", eventName);
+                    if (!string.Equals(eventName, "PackageDispatchCreated", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _logger.LogWarning("Mensaje con event no reconocido en {Queue}. Event: {Event}. Body: {Body}", _options.InputQueueName, eventName, raw);
+                        _channel.BasicAck(eventArgs.DeliveryTag, false);
+                        return;
+                    }*/
+                    payload = ExtractPayload(raw);
+                }
+                catch (JsonException)
+                {
+                    _logger.LogWarning("Mensaje con formato JSON inválido en {Queue}. Body: {Body}", _options.InputQueueName, raw);
+                    _channel.BasicAck(eventArgs.DeliveryTag, false);
+                    return;
+                }
+
+                //var payload = ExtractPayload(raw);
 
                 if (payload is null)
                 {
@@ -260,6 +281,26 @@ namespace LogisticsAndDeliveries.Infrastructure.Messaging.Consumers
         private static bool IsNonRetryableError(ErrorType errorType)
         {
             return errorType is ErrorType.Validation or ErrorType.NotFound or ErrorType.Conflict;
+        }
+
+        private static String ExtractEventName(string raw)
+        {
+            using var document = JsonDocument.Parse(raw);
+
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+            {
+                return string.Empty;
+            }
+
+            foreach (var property in document.RootElement.EnumerateObject())
+            {
+                if (string.Equals(property.Name, "event", StringComparison.OrdinalIgnoreCase))
+                {
+                    return property.Value.GetString() ?? string.Empty;
+                }
+            }
+
+            return string.Empty;
         }
 
         private static PackageDispatchCreatedPayload? ExtractPayload(string raw)
