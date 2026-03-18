@@ -1,15 +1,24 @@
-﻿using LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFCoreEntities;
-using LogisticsAndDeliveries.Infrastructure.Outbox;
+﻿using LogisticsAndDeliveries.Infrastructure.Outbox;
+using LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFCoreEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel
 {
     public class PersistenceDbContext : DbContext, IDatabase
     {
-        public DbSet<PackagePersistenceModel> Package { get; set; }
-        public DbSet<DriverPersistenceModel> Driver { get; set; }
-        public DbSet<OutboxMessage> OutboxMessage { get; set; }
-        public PersistenceDbContext(DbContextOptions<PersistenceDbContext> options) : base(options) {}
+        public DbSet<PackagePersistenceModel> Package
+        {
+            get; set;
+        }
+        public DbSet<DriverPersistenceModel> Driver
+        {
+            get; set;
+        }
+        public DbSet<OutboxMessage> OutboxMessage
+        {
+            get; set;
+        }
+        public PersistenceDbContext(DbContextOptions<PersistenceDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

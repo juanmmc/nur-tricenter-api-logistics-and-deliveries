@@ -19,7 +19,7 @@ namespace LogisticsAndDeliveries.Application.Drivers.CreateDriver
         public async Task<Result<Guid>> Handle(CreateDriverCommand request, CancellationToken cancellationToken)
         {
             Guid newDriverId = Guid.NewGuid();
-            
+
             // Crear el agregado de dominio
             var driver = new Driver(newDriverId, request.Name);
 

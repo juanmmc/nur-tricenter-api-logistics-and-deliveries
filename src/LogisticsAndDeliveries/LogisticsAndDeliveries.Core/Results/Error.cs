@@ -9,15 +9,27 @@ namespace LogisticsAndDeliveries.Core.Results
 {
     public record Error
     {
-        public string Code { get; }
-        public string Description { get; }
-        public ErrorType Type { get; }
-        public string StructuredMessage { get; }
+        public string Code
+        {
+            get;
+        }
+        public string Description
+        {
+            get;
+        }
+        public ErrorType Type
+        {
+            get;
+        }
+        public string StructuredMessage
+        {
+            get;
+        }
 
         public static readonly Error None = new(string.Empty, string.Empty, ErrorType.Failure);
         public static readonly Error NullValue = new(
-            "General.Null", 
-            "Null value was provided", 
+            "General.Null",
+            "Null value was provided",
             ErrorType.Failure);
 
         public Error(string code, string structuredMessage, ErrorType type, params string[]? args)
@@ -55,16 +67,16 @@ namespace LogisticsAndDeliveries.Core.Results
             return result.ToString();
         }
 
-        public static Error Failure(string code, string structuredMessage, params string[]? args) => 
+        public static Error Failure(string code, string structuredMessage, params string[]? args) =>
             new(code, structuredMessage, ErrorType.Failure, args);
 
-        public static Error NotFound(string code, string structuredMessage, params string[]? args) => 
+        public static Error NotFound(string code, string structuredMessage, params string[]? args) =>
             new(code, structuredMessage, ErrorType.NotFound, args);
 
-        public static Error Problem(string code, string structuredMessage, params string[]? args) => 
+        public static Error Problem(string code, string structuredMessage, params string[]? args) =>
             new(code, structuredMessage, ErrorType.Problem, args);
 
-        public static Error Conflict(string code, string structuredMessage, params string[]? args) => 
+        public static Error Conflict(string code, string structuredMessage, params string[]? args) =>
             new(code, structuredMessage, ErrorType.Conflict, args);
     }
 }

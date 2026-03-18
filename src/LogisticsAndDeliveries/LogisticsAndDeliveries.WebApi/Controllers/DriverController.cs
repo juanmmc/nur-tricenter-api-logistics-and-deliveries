@@ -2,9 +2,9 @@
 using LogisticsAndDeliveries.Application.Drivers.GetDriver;
 using LogisticsAndDeliveries.Application.Drivers.GetDrivers;
 using LogisticsAndDeliveries.Application.Drivers.UpdateDriverLocation;
+using LogisticsAndDeliveries.WebApi.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using LogisticsAndDeliveries.WebApi.Extensions;
 
 namespace LogisticsAndDeliveries.WebApi.Controllers
 {
@@ -18,7 +18,7 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         {
             _mediator = mediator;
         }
-        
+
         [HttpPost("createDriver")]
         public async Task<IActionResult> CreateDriver([FromBody] CreateDriverCommand request)
         {

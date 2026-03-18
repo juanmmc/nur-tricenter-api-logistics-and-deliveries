@@ -1,9 +1,9 @@
-﻿using System.Text;
-using System.Text.Json;
-using LogisticsAndDeliveries.Domain.Drivers;
+﻿using LogisticsAndDeliveries.Domain.Drivers;
 using LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel;
 using LogisticsAndDeliveries.Infrastructure.Persistence.PersistenceModel.EFCoreEntities;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.Json;
 
 namespace LogisticsAndDeliveries.WebApi.Middleware
 {
@@ -147,8 +147,14 @@ namespace LogisticsAndDeliveries.WebApi.Middleware
 
         private class ProviderState
         {
-            public string? State { get; set; }
-            public Dictionary<string, object>? Params { get; set; }
+            public string? State
+            {
+                get; set;
+            }
+            public Dictionary<string, object>? Params
+            {
+                get; set;
+            }
         }
     }
 

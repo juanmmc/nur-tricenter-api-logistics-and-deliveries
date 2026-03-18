@@ -240,7 +240,7 @@ public class PackageControllerIntegrationTest
 
     private async Task<Guid> GetRandomDriverIdAsync()
     {
-        var getResp= await _httpClient.GetAsync(("/api/Driver/getDrivers"));
+        var getResp = await _httpClient.GetAsync(("/api/Driver/getDrivers"));
         getResp.EnsureSuccessStatusCode();
         var dtos = await getResp.Content.ReadFromJsonAsync<List<DriverDto>>();
         if (dtos == null || dtos.Count == 0)

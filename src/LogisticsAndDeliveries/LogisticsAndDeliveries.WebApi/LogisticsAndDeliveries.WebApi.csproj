@@ -19,4 +19,12 @@
     <ProjectReference Include="..\LogisticsAndDeliveries.Infrastructure\LogisticsAndDeliveries.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\PC\Documents\Git\microservicios\nur-tricenter-api-logistics-and-deliveries\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\PC\Documents\Git\microservicios\nur-tricenter-api-logistics-and-deliveries\src\LogisticsAndDeliveries\LogisticsAndDeliveries.WebApi\.editorconfig" />
+  </ItemGroup>
+
 </Project>

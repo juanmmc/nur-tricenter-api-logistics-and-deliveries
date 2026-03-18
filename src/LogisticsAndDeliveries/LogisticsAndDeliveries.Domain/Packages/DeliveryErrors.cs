@@ -5,18 +5,18 @@ namespace LogisticsAndDeliveries.Domain.Packages
     public static class DeliveryErrors
     {
         public static readonly Error InvalidOrderValue = new(
-            "Delivery.InvalidOrderValue", 
-            "El valor del orden no puede ser cero o negativo.", 
+            "Delivery.InvalidOrderValue",
+            "El valor del orden no puede ser cero o negativo.",
             ErrorType.Failure);
 
         public static readonly Error InvalidStatusTransition = new(
-            "Delivery.InvalidStatusTransition", 
-            "La transición de estado no es válida.", 
+            "Delivery.InvalidStatusTransition",
+            "La transición de estado no es válida.",
             ErrorType.Failure);
 
         public static readonly Error CannotCancelCompletedDelivery = new(
-            "Delivery.CannotCancelDelivered", 
-            "No se puede cancelar un paquete ya entregado.", 
+            "Delivery.CannotCancelDelivered",
+            "No se puede cancelar un paquete ya entregado.",
             ErrorType.Failure);
 
         public static readonly Error InvalidIncidentDate = new(

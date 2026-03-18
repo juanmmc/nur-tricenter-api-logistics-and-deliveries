@@ -8,24 +8,71 @@ namespace LogisticsAndDeliveries.Domain.Packages
 {
     public class Package : AggregateRoot
     {
-        public Guid DriverId { get; private set; }
-        public string Number { get; private set; }
-        public Guid PatientId { get; private set; }
-        public string PatientName { get; private set; }
-        public string PatientPhone { get; private set; }
-        public string DeliveryAddress { get; private set; }
-        public double DeliveryLatitude { get; private set; }
-        public double DeliveryLongitude { get; private set; }
-        public DateOnly DeliveryDate { get; private set; }
-        public string? DeliveryEvidence { get; private set; }
-        public int DeliveryOrder { get; private set; }
-        public DeliveryStatus DeliveryStatus { get; private set; }
-        public IncidentType? IncidentType { get; private set; }
-        public string? IncidentDescription { get; private set; }
-        public DateTime? UpdatedAt { get; private set; }
+        public Guid DriverId
+        {
+            get; private set;
+        }
+        public string Number
+        {
+            get; private set;
+        }
+        public Guid PatientId
+        {
+            get; private set;
+        }
+        public string PatientName
+        {
+            get; private set;
+        }
+        public string PatientPhone
+        {
+            get; private set;
+        }
+        public string DeliveryAddress
+        {
+            get; private set;
+        }
+        public double DeliveryLatitude
+        {
+            get; private set;
+        }
+        public double DeliveryLongitude
+        {
+            get; private set;
+        }
+        public DateOnly DeliveryDate
+        {
+            get; private set;
+        }
+        public string? DeliveryEvidence
+        {
+            get; private set;
+        }
+        public int DeliveryOrder
+        {
+            get; private set;
+        }
+        public DeliveryStatus DeliveryStatus
+        {
+            get; private set;
+        }
+        public IncidentType? IncidentType
+        {
+            get; private set;
+        }
+        public string? IncidentDescription
+        {
+            get; private set;
+        }
+        public DateTime? UpdatedAt
+        {
+            get; private set;
+        }
 
         // Constructor para EF Core
-        private Package() { }
+        private Package()
+        {
+        }
 
         // Constructor de dominio
         public Package(Guid id, string number, Guid patientId, string patientName, string patientPhone, string deliveryAddress, double deliveryLatitude, double deliveryLongitude, DateOnly deliveryDate, Guid driverId) : base(id)
@@ -58,10 +105,10 @@ namespace LogisticsAndDeliveries.Domain.Packages
             {
                 throw new DomainException(PackageErrors.InvalidDeliveryLongitude());
             }
-            if (deliveryDate == DateOnly.FromDateTime(DateTime.UtcNow))
+            /*if (deliveryDate == DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 throw new DomainException(PackageErrors.InvalidDeliveryDate());
-            }
+            }*/
             if (driverId == Guid.Empty)
             {
                 throw new DomainException(PackageErrors.DriverIdIsRequired());

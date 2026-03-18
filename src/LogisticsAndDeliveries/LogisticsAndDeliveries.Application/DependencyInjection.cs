@@ -1,5 +1,5 @@
-﻿using LogisticsAndDeliveries.Domain;
-using LogisticsAndDeliveries.Application.Packages.DriverSelection;
+﻿using LogisticsAndDeliveries.Application.Packages.DriverSelection;
+using LogisticsAndDeliveries.Domain;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -22,4 +22,3 @@ namespace LogisticsAndDeliveries.Application
         }
     }
 }
- 

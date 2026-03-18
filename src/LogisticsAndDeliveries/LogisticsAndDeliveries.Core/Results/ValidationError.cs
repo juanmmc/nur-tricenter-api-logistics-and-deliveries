@@ -16,9 +16,12 @@ namespace LogisticsAndDeliveries.Core.Results
             Errors = errors;
         }
 
-        public Error[] Errors { get; }
+        public Error[] Errors
+        {
+            get;
+        }
 
-        public static ValidationError FromResults(IEnumerable<Result> results) => 
+        public static ValidationError FromResults(IEnumerable<Result> results) =>
             new(results.Where(r => r.IsFailure).Select(r => r.Error).ToArray());
     }
 }

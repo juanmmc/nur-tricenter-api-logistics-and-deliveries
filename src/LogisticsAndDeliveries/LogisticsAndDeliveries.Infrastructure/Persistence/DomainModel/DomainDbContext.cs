@@ -1,6 +1,6 @@
-﻿using LogisticsAndDeliveries.Domain.Packages;
+﻿using LogisticsAndDeliveries.Domain.Drivers;
+using LogisticsAndDeliveries.Domain.Packages;
 using LogisticsAndDeliveries.Infrastructure.Outbox;
-using LogisticsAndDeliveries.Domain.Drivers;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -8,9 +8,18 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel
 {
     public class DomainDbContext : DbContext
     {
-        public DbSet<Package> Package { get; set; }
-        public DbSet<Driver> Driver { get; set; }
-        public DbSet<OutboxMessage> OutboxMessage { get; set; }
+        public DbSet<Package> Package
+        {
+            get; set;
+        }
+        public DbSet<Driver> Driver
+        {
+            get; set;
+        }
+        public DbSet<OutboxMessage> OutboxMessage
+        {
+            get; set;
+        }
 
         public DomainDbContext(DbContextOptions<DomainDbContext> options) : base(options) { }
 
@@ -34,7 +43,7 @@ namespace LogisticsAndDeliveries.Infrastructure.Persistence.DomainModel
                 builder.HasIndex(message => new { message.ProcessedOnUtc, message.OccurredOnUtc })
                     .HasDatabaseName("IX_outbox_message_processedOnUtc_occurredOnUtc");
             });
-            
+
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Ignore<Core.Abstractions.DomainEvent>();
