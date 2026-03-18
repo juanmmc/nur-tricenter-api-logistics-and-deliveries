@@ -1,2 +1,6 @@
 src/LogisticsAndDeliveries/.vs
 node_modules
+
+# .NET build artifacts
+**/bin/
+**/obj/
