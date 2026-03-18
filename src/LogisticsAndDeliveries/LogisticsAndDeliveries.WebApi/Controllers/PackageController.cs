@@ -46,19 +46,22 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         }
 
         [HttpPost("setDeliveryOrder")]
-        public async Task<IActionResult> SetDeliveryOrder([FromBody] SetDeliveryOrderCommand request){
+        public async Task<IActionResult> SetDeliveryOrder([FromBody] SetDeliveryOrderCommand request)
+        {
             var result = await _mediator.Send(request);
             return result.ToActionResult(this);
         }
 
         [HttpPost("cancelDelivery")]
-        public async Task<IActionResult> CancelDelivery([FromBody] CancelDeliveryCommand request){
+        public async Task<IActionResult> CancelDelivery([FromBody] CancelDeliveryCommand request)
+        {
             var result = await _mediator.Send(request);
             return result.ToActionResult(this);
         }
 
         [HttpPost("markDeliveryFailed")]
-        public async Task<IActionResult> MarkDeliveryFailed([FromBody] MarkDeliveryFailedCommand request){
+        public async Task<IActionResult> MarkDeliveryFailed([FromBody] MarkDeliveryFailedCommand request)
+        {
             var result = await _mediator.Send(request);
             return result.ToActionResult(this);
         }
