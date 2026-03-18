@@ -23,7 +23,7 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         {
             _mediator = mediator;
         }
-        
+
         [HttpPost("createPackage")]
         public async Task<IActionResult> CreatePackage([FromBody] CreatePackageCommand request)
         {
@@ -46,8 +46,7 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         }
 
         [HttpPost("setDeliveryOrder")]
-        public async Task<IActionResult> SetDeliveryOrder([FromBody] SetDeliveryOrderCommand request)
-        {
+        public async Task<IActionResult> SetDeliveryOrder([FromBody] SetDeliveryOrderCommand request){
             var result = await _mediator.Send(request);
             return result.ToActionResult(this);
         }

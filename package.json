@@ -1,0 +1,17 @@
+{
+  "name": "nur-tricenter-api-logistics-and-deliveries",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.0"
+  },
+  "lint-staged": {
+    "*.cs": "dotnet format src/LogisticsAndDeliveries/LogisticsAndDeliveries.sln --include"
+  }
+}

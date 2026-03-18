@@ -1,0 +1,80 @@
+<Project>
+  <PropertyGroup>
+    <!-- Detecta CI en proveedores comunes y en ContinuousIntegrationBuild de .NET -->
+    <_CI>$([System.String]::Copy('$(CI)').ToLowerInvariant())</_CI>
+    <_TF_BUILD>$([System.String]::Copy('$(TF_BUILD)').ToLowerInvariant())</_TF_BUILD>
+    <_GITHUB_ACTIONS>$([System.String]::Copy('$(GITHUB_ACTIONS)').ToLowerInvariant())</_GITHUB_ACTIONS>
+    <_CONTINUOUS_INTEGRATION_BUILD>$([System.String]::Copy('$(ContinuousIntegrationBuild)').ToLowerInvariant())</_CONTINUOUS_INTEGRATION_BUILD>
+
+    <IsCI Condition="'$(_CI)' == 'true'">true</IsCI>
+    <IsCI Condition="'$(_TF_BUILD)' == 'true'">true</IsCI>
+    <IsCI Condition="'$(_GITHUB_ACTIONS)' == 'true'">true</IsCI>
+    <IsCI Condition="'$(_CONTINUOUS_INTEGRATION_BUILD)' == 'true'">true</IsCI>
+    <IsCI Condition="'$(IsCI)' == ''">false</IsCI>
+  </PropertyGroup>
+
+  <Target Name="SampleOnlyOutsideCI"
+          BeforeTargets="Build"
+          Condition="'$(IsCI)' != 'true'">
+    <PropertyGroup>
+      <InstallStampPath>$(MSBuildProjectDirectory)\.install-stamp</InstallStampPath>
+      <InstallStampTimestamp>$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"))</InstallStampTimestamp>
+    </PropertyGroup>
+
+    <Exec Command="node --version"
+          IgnoreExitCode="true">
+      <Output TaskParameter="ExitCode" PropertyName="NodeVersionExitCode" />
+    </Exec>
+
+    <Error Condition="'$(NodeVersionExitCode)' != '0'"
+           Text="Node.js no está instalado o no está en PATH. Instálalo para continuar con la compilación." />
+
+          <Exec Command="npm install"
+          WorkingDirectory="$(MSBuildProjectDirectory)"
+            Condition="'$(NodeVersionExitCode)' == '0' and Exists('$(MSBuildProjectDirectory)\\package.json') and !Exists('$(InstallStampPath)')" />
+
+          <WriteLinesToFile File="$(InstallStampPath)"
+                Lines="Last npm install (UTC): $(InstallStampTimestamp)"
+                Overwrite="true"
+                Condition="'$(NodeVersionExitCode)' == '0' and Exists('$(MSBuildProjectDirectory)\\package.json') and !Exists('$(InstallStampPath)')" />
+
+          <Message Text="npm install omitido porque existe $(InstallStampPath)."
+           Importance="Low"
+           Condition="Exists('$(InstallStampPath)') and Exists('$(MSBuildProjectDirectory)\\package.json')" />
+
+    <Message Text="SampleOnlyOutsideCI ejecutado (no CI) en $(MSBuildProjectName)."
+             Importance="High" />
+
+  </Target>
+
+  <!--
+    Target separado para instalar dependencias en la raíz del repo (husky, commitlint, lint-staged).
+    MSBuildThisFileDirectory apunta a src/LogisticsAndDeliveries/, por lo que ..\..\
+    sube a la raíz donde vive el .git y el package.json.
+    El stamp en la raíz asegura que npm install corra solo una vez aunque
+    se compilen varios proyectos de la solución.
+  -->
+  <Target Name="InstallRepoRootNodeModules"
+          BeforeTargets="Build"
+          Condition="'$(IsCI)' != 'true'">
+    <PropertyGroup>
+      <RepoRootDir>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\..\'))</RepoRootDir>
+      <RepoRootPackageJson>$(RepoRootDir)package.json</RepoRootPackageJson>
+      <RepoRootInstallStamp>$(RepoRootDir).install-stamp</RepoRootInstallStamp>
+      <RepoRootInstallTimestamp>$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"))</RepoRootInstallTimestamp>
+    </PropertyGroup>
+
+    <Exec Command="npm install"
+          WorkingDirectory="$(RepoRootDir)"
+          Condition="Exists('$(RepoRootPackageJson)') and !Exists('$(RepoRootInstallStamp)')" />
+
+    <WriteLinesToFile File="$(RepoRootInstallStamp)"
+                      Lines="Last npm install (UTC): $(RepoRootInstallTimestamp)"
+                      Overwrite="true"
+                      Condition="Exists('$(RepoRootPackageJson)') and !Exists('$(RepoRootInstallStamp)')" />
+
+    <Message Text="npm install en raíz del repo omitido: ya existe $(RepoRootInstallStamp)."
+             Importance="Low"
+             Condition="Exists('$(RepoRootPackageJson)') and Exists('$(RepoRootInstallStamp)')" />
+  </Target>
+</Project>
