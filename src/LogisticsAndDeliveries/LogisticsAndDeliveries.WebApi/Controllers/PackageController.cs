@@ -58,8 +58,7 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         }
 
         [HttpPost("markDeliveryFailed")]
-        public async Task<IActionResult> MarkDeliveryFailed([FromBody] MarkDeliveryFailedCommand request)
-        {
+        public async Task<IActionResult> MarkDeliveryFailed([FromBody] MarkDeliveryFailedCommand request){
             var result = await _mediator.Send(request);
             return result.ToActionResult(this);
         }
