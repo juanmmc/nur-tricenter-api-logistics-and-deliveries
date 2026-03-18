@@ -105,10 +105,10 @@ namespace LogisticsAndDeliveries.Domain.Packages
             {
                 throw new DomainException(PackageErrors.InvalidDeliveryLongitude());
             }
-            /*if (deliveryDate == DateOnly.FromDateTime(DateTime.UtcNow))
+            if (deliveryDate < DateOnly.FromDateTime(DateTime.UtcNow))
             {
                 throw new DomainException(PackageErrors.InvalidDeliveryDate());
-            }*/
+            }
             if (driverId == Guid.Empty)
             {
                 throw new DomainException(PackageErrors.DriverIdIsRequired());

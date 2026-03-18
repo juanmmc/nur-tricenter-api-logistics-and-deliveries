@@ -62,7 +62,7 @@ public class CreatePackageHandlerTest
         var command = new CreatePackageCommand
         {
             Id = Guid.NewGuid(),
-            Number = "", // Número inválido
+            Number = "", // NÃºmero invÃ¡lido
             PatientId = Guid.NewGuid(),
             PatientName = "Juan Miguel",
             PatientPhone = "72193153",
@@ -73,11 +73,13 @@ public class CreatePackageHandlerTest
             DriverId = Guid.NewGuid()
         };
 
-        // Act & Assert
-        await Assert.ThrowsAsync<DomainException>(async () =>
-        {
-            await _handler.Handle(command, CancellationToken.None);
-        });
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.True(result.IsFailure);
+        Assert.Equal("Package.NumberIsRequired", result.Error.Code);
+        Assert.Equal(ErrorType.Validation, result.Error.Type);
 
         _packageRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Package>()), Times.Never);
         _unitOfWorkMock.Verify(x => x.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
