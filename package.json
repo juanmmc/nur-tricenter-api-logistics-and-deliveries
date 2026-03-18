@@ -12,6 +12,6 @@
     "lint-staged": "^15.5.0"
   },
   "lint-staged": {
-    "*.cs": "dotnet format src/LogisticsAndDeliveries/LogisticsAndDeliveries.sln --include"
+    "**/*.cs": "dotnet format src/LogisticsAndDeliveries/LogisticsAndDeliveries.sln --include"
   }
 }
