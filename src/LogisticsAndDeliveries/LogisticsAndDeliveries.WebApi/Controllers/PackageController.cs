@@ -52,8 +52,7 @@ namespace LogisticsAndDeliveries.WebApi.Controllers
         }
 
         [HttpPost("cancelDelivery")]
-        public async Task<IActionResult> CancelDelivery([FromBody] CancelDeliveryCommand request)
-        {
+        public async Task<IActionResult> CancelDelivery([FromBody] CancelDeliveryCommand request){
             var result = await _mediator.Send(request);
             return result.ToActionResult(this);
         }
