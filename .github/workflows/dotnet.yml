@@ -58,7 +58,7 @@ jobs:
       run: >
         dotnet test src/LogisticsAndDeliveries/LogisticsAndDeliveries.Test/LogisticsAndDeliveries.Test.csproj --no-build
         -p:CollectCoverage=true
-        -p:CoverletOutputFormat=opencover,cobertura
+        -p:CoverletOutputFormat=opencover
         -p:CoverletOutput=TestResults/coverage.opencover.xml
         --verbosity normal
     - name: Sonar - End analysis
