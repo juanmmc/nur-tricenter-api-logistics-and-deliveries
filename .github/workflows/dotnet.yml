@@ -15,22 +15,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: 'zulu' # Alternative distribution options are available.
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
+    - name: Cache SonarQube Cloud packages
+      uses: actions/cache@v4
+      with:
+        path: ~\sonar\cache
+        key: ${{ runner.os }}-sonar
+        restore-keys: ${{ runner.os }}-sonar
+    - name: Install SonarQube Cloud scanner
+      if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+      run: |
+        dotnet tool install dotnet-sonarscanner --create-manifest-if-needed
     - name: Restore dependencies
       run: dotnet restore src/LogisticsAndDeliveries/LogisticsAndDeliveries.sln
+    - name: Sonar - Begin analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: >
+        dotnet sonarscanner begin
+        /k:"juanmmc_nur-tricenter-api-logistics-and-deliveries"
+        /o:"juanmmc"
+        /d:sonar.token="$SONAR_TOKEN"
+        /d:sonar.host.url="https://sonarcloud.io"
+        /d:sonar.cs.opencover.reportsPaths="**/TestResults/coverage.opencover.xml"
+        /d:sonar.coverage.exclusions="**/LogisticsAndDeliveries.Test/**"
+        /d:sonar.exclusions="Migrations/**,**/obj/**,**/bin/**"
+        /d:qualitygate.wait=true
     - name: Build
       run: dotnet build src/LogisticsAndDeliveries/LogisticsAndDeliveries.sln --no-restore
     - name: Test
       run: >
         dotnet test src/LogisticsAndDeliveries/LogisticsAndDeliveries.Test/LogisticsAndDeliveries.Test.csproj --no-build
         -p:CollectCoverage=true
-        -p:CoverletOutputFormat=opencover
+        -p:CoverletOutputFormat=opencover,cobertura
         -p:CoverletOutput=TestResults/coverage.opencover.xml
         --verbosity normal
+    - name: Sonar - End analysis
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
     - name: Restore dotnet tools
       working-directory: src/LogisticsAndDeliveries/LogisticsAndDeliveries.Test
       run: dotnet tool restore
