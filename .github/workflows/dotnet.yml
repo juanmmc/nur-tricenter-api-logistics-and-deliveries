@@ -32,12 +32,14 @@ jobs:
         -p:CoverletOutput=TestResults/coverage.opencover.xml
         --verbosity normal
     - name: Restore dotnet tools
+      working-directory: src/LogisticsAndDeliveries/LogisticsAndDeliveries.Test
       run: dotnet tool restore
     - name: Generate code coverage report
+      working-directory: src/LogisticsAndDeliveries/LogisticsAndDeliveries.Test
       run: >
         dotnet tool run reportgenerator
-        -reports:src/LogisticsAndDeliveries/LogisticsAndDeliveries.Test/TestResults/coverage.opencover.xml
-        -targetdir:src/LogisticsAndDeliveries/LogisticsAndDeliveries.Test/TestResults/CoverageReport
+        -reports:TestResults/coverage.opencover.xml
+        -targetdir:TestResults/CoverageReport
         -reporttypes:Html
     - name: Upload code coverage report
       uses: actions/upload-artifact@v4
