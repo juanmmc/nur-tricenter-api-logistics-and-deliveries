@@ -28,7 +28,6 @@ jobs:
             mkdir -p "$APP_DIR"
             cd "$APP_DIR"
 
-            # Clone or update
             if [ ! -d "nur-tricenter-api-logistics-and-deliveries/.git" ]; then
               rm -rf nur-tricenter-api-logistics-and-deliveries
               git clone "$REPO_URL"
