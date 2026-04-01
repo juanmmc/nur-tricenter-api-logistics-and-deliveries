@@ -1,9 +1,9 @@
 services:
   api:
-    image: juanmurielc/logisticsanddeliveries_webapi:3.0.0
+    image: juanmurielc/logisticsanddeliveries_webapi:4.0.0
     container_name: api_container
     ports:
-      - 80:80
+      - 9007:80
     environment:
       - ConnectionStrings__LogisticsAndDeliveriesDatabase=Server=db;Port=5432;Database=api_db;Username=api_user;Password=ApiPass123;Include Error Detail=true
     volumes:

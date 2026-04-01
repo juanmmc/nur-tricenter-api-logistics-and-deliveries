@@ -83,10 +83,30 @@ cd c:/Users/PC/Documents/Git/microservicios/ms2024-m2-tf-juanmmc/src
 docker build -t juanmurielc/logisticsanddeliveries_webapi:1.0.0 -f Dockerfile .
 ```
 
+O también:
+
+```bash
+docker image build -t juanmurielc/logisticsanddeliveries_webapi:4.0.0 .
+```
+
+Subir imagen a Docker Hub:
+
+```bash
+docker logout
+docker login -u juanmurielc
+docker image push -a juanmurielc/logisticsanddeliveries_webapi
+```
+
 ### Paso 2: Iniciar los servicios
 
 ```bash
 docker-compose up -d
+```
+
+O también:
+
+```bash
+docker compose up -d -p logisticsanddeliveries_webapi
 ```
 
 ### Paso 3: Ver los logs

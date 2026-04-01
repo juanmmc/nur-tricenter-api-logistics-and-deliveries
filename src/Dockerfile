@@ -2,6 +2,7 @@
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+ENV CI=true
 
 # Copiar archivos de proyecto para aprovechar la cache de Docker
 COPY ["LogisticsAndDeliveries/LogisticsAndDeliveries.Core/LogisticsAndDeliveries.Core.csproj", "LogisticsAndDeliveries/LogisticsAndDeliveries.Core/"]
