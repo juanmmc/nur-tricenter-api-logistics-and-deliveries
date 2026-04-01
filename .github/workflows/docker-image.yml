@@ -1,0 +1,45 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy via SSH (git pull + docker-compose up)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          script: |
+            set -e
+
+            APP_DIR="/root/nur"
+            REPO_URL="https://github.com/juanmmc/nur-tricenter-api-logistics-and-deliveries.git"
+
+            # Ensure base dir exists
+            mkdir -p "$APP_DIR"
+            cd "$APP_DIR"
+
+            # Clone or update
+            if [ ! -d "nur-tricenter-api-logistics-and-deliveries/.git" ]; then
+              rm -rf nur-tricenter-api-logistics-and-deliveries
+              git clone "$REPO_URL"
+            else
+              cd nur-tricenter-api-logistics-and-deliveries
+              git fetch --all --prune
+              git reset --hard origin/main
+              cd ..
+            fi
+
+            # Deploy
+            cd nur-tricenter-api-logistics-and-deliveries/src
+            docker-compose up -d
