@@ -26,4 +26,3 @@ jobs:
           push: true
           tags: |
             juanmurielc/logisticsanddeliveries_webapi:${{ github.ref_name }}
-            juanmurielc/logisticsanddeliveries_webapi:${{ github.sha }}
