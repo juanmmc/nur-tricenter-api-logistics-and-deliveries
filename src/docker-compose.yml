@@ -1,6 +1,6 @@
 services:
   api:
-    image: juanmurielc/logisticsanddeliveries_webapi:4.0.0
+    image: juanmurielc/logisticsanddeliveries_webapi:${IMAGE_TAG:-4.0.0}
     container_name: api_container
     ports:
       - 9007:80
