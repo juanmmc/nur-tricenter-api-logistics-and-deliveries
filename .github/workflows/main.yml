@@ -13,16 +13,16 @@ jobs:
     steps:
       - name: Checkout files
         uses: actions/checkout@v4
-      - name: Copy Docker file
-        run: cp ${{ github.workspace }}/docker-deploy/Dockerfile ${{ github.workspace }}/Dockerfile
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Build and push Docker images
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v6
         with:
+          context: .
+          file: ./docker-deploy/Dockerfile
           push: true
           tags: |
             juanmurielc/logisticsanddeliveries_webapi:${{ github.ref_name }}
