@@ -1,7 +1,7 @@
 services:
   api:
     image: juanmurielc/logisticsanddeliveries_webapi:${IMAGE_TAG:-4.0.0}
-    container_name: api_container
+    container_name: logistics_deliveries_api_container
     ports:
       - 9007:80
     environment:
@@ -13,7 +13,7 @@ services:
         condition: service_healthy
   db:
     image: postgres:13.22
-    container_name: db_container
+    container_name: logistics_deliveries_db_container
     environment:
       - POSTGRES_USER=api_user
       - POSTGRES_PASSWORD=ApiPass123
