@@ -60,6 +60,7 @@ jobs:
         -p:CollectCoverage=true
         -p:CoverletOutputFormat=opencover
         -p:CoverletOutput=TestResults/coverage.opencover.xml
+        -p:Exclude='[*]*.Migrations.*%2C[*]*.DependencyInjection%2C[*]*Program%2C[LogisticsAndDeliveries.Core]*'
         --verbosity normal
     - name: Sonar - End analysis
       env:
