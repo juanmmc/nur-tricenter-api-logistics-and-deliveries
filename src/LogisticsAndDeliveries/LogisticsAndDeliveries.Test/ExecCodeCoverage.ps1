@@ -1,4 +1,4 @@
-# Ejecutar desde el directorio del script o llama el script desde la raíz del proyecto de tests
+# Ejecutar desde el directorio del script o llama el script desde la raï¿½z del proyecto de tests
 # Uso: pwsh .\ExecCodeCoverage.ps1
 
 # Obtener directorio del script (proyecto de tests)
@@ -15,7 +15,7 @@ function Has-GlobalReportGenerator {
     }
 }
 
-# Comprueba si hay un manifest de herramientas local y si reportgenerator está instalado allí
+# Comprueba si hay un manifest de herramientas local y si reportgenerator estï¿½ instalado allï¿½
 function Has-LocalReportGenerator {
     try {
         # Ejecutar desde el directorio del script para detectar manifest local
@@ -64,19 +64,23 @@ if (-not $useGlobal -and -not $useLocal) {
     } elseif (Ensure-GlobalReportGenerator) {
         $useGlobal = $true
     } else {
-        Write-Error "No se pudo instalar reportgenerator ni local ni globalmente. Añade el tool manualmente o instala globalmente."
+        Write-Error "No se pudo instalar reportgenerator ni local ni globalmente. Aï¿½ade el tool manualmente o instala globalmente."
         exit 1
     }
 }
 
-# Opciones: si existe coverlet.runsettings usa --settings, si no usa coverlet.msbuild (opcional)
-# $runSettingsPath = Join-Path $scriptDir 'coverlet.runsettings'
-# if (Test-Path $runSettingsPath) {
-#     $testCommand = "dotnet test --settings `"$runSettingsPath`" --collect:`"XPlat Code Coverage`""
-# } else {
-#     Write-Host "No se encontró coverlet.runsettings; usando Coverlet.MSBuild (opcional)."
-    $testCommand = "dotnet test --no-build -p:CollectCoverage=true -p:CoverletOutputFormat=opencover -p:CoverletOutput=TestResults/coverage.opencover.xml"
-# }
+# Patrones de exclusiÃ³n de cobertura (Coverlet): [assembly]namespace.Clase
+# Usar %2C como separador (coma URL-encoded) para evitar que MSBuild lo interprete como separador de lista
+$coverletExclude = '[*]*.Migrations.*%2C[*]*.DependencyInjection%2C[*]*Program%2C[LogisticsAndDeliveries.Core]*'
+
+# Argumentos de dotnet test como array (evita problemas de escape con Invoke-Expression)
+$testArgs = @(
+    'test', '--no-build',
+    '-p:CollectCoverage=true',
+    '-p:CoverletOutputFormat=opencover',
+    '-p:CoverletOutput=TestResults/coverage.opencover.xml',
+    "-p:Exclude=$coverletExclude"
+)
 
 # Archivar TestResults previo en vez de eliminar, para mantener rastros si hace falta
 $testResultsDir = Join-Path $scriptDir 'TestResults'
@@ -89,9 +93,9 @@ if (Test-Path $testResultsDir) {
 
 # Ejecutar tests y recogida de cobertura
 Write-Host "Ejecutando tests y recogiendo cobertura..."
-Invoke-Expression $testCommand
+& dotnet @testArgs
 if ($LASTEXITCODE -ne 0) {
-    Write-Warning "dotnet test devolvió código $LASTEXITCODE. Revisar errores de test antes de generar informe."
+    Write-Warning "dotnet test devolvio codigo $LASTEXITCODE. Revisar errores de test antes de generar informe."
 }
 
 # Buscar el archivo de cobertura: primero opencover, si no existe intentar .coverage (Visual Studio)
@@ -103,14 +107,14 @@ if (-not $coverageFile) {
     $coverageBin = Get-ChildItem -Path $scriptDir -Recurse -Filter "*.coverage" -ErrorAction SilentlyContinue |
         Sort-Object LastWriteTime -Descending | Select-Object -First 1
     if ($coverageBin) {
-        Write-Host "Se encontró archivo binario de cobertura: $($coverageBin.FullName)"
+        Write-Host "Se encontrï¿½ archivo binario de cobertura: $($coverageBin.FullName)"
         $coverageFile = $coverageBin
         $usingBinaryCoverage = $true
     }
 }
 
 if (-not $coverageFile) {
-    Write-Error "No se encontró coverage.opencover.xml ni archivo .coverage en TestResults. Asegúrate de que la recolección de cobertura se ejecutó correctamente."
+    Write-Error "No se encontrï¿½ coverage.opencover.xml ni archivo .coverage en TestResults. Asegï¿½rate de que la recolecciï¿½n de cobertura se ejecutï¿½ correctamente."
     exit 1
 }
 
@@ -123,13 +127,13 @@ $targetDir = Join-Path $reportsDir $runStamp
 New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
 New-Item -ItemType Directory -Force -Path $historyDir | Out-Null
 
-# Copiar el archivo de cobertura al historial con marca temporal (preserva evolución)
+# Copiar el archivo de cobertura al historial con marca temporal (preserva evoluciï¿½n)
 $ext = if ($usingBinaryCoverage) { ".coverage" } else { ".opencover.xml" }
 $baseName = $coverageFile.BaseName
 $historyCopyName = "{0}_{1}{2}" -f $baseName, $runStamp, $ext
 Copy-Item $coverageFile.FullName -Destination (Join-Path $historyDir $historyCopyName) -Force
 
-# Invocar ReportGenerator pasando parámetros como argumentos (evita que PowerShell interprete ;)
+# Invocar ReportGenerator pasando parï¿½metros como argumentos (evita que PowerShell interprete ;)
 $reportsArg = $coverageFile.FullName
 $historyArg = $historyDir
 $targetArg = $targetDir
@@ -141,17 +145,17 @@ if ($useGlobal) {
     $exitCode = $LASTEXITCODE
 } else {
     Write-Host "Generando informe HTML (tool local via dotnet tool run)..."
-    # Pasar los argumentos después del --. Cada argumento como string evita que PowerShell rompa por ';'
+    # Pasar los argumentos despuï¿½s del --. Cada argumento como string evita que PowerShell rompa por ';'
     & dotnet 'tool' 'run' 'reportgenerator' '--' "-reports:$reportsArg" "-targetdir:$targetArg" "-reporttypes:$reportTypesValue" "-historydir:$historyArg"
     $exitCode = $LASTEXITCODE
 }
 
 if ($exitCode -ne 0) {
-    Write-Error "ReportGenerator devolvió código $exitCode."
+    Write-Error "ReportGenerator devolviï¿½ cï¿½digo $exitCode."
     exit 1
 }
 
-# Determinar el fichero índice (ReportGenerator suele crear index.html)
+# Determinar el fichero ï¿½ndice (ReportGenerator suele crear index.html)
 $indexHtml = Join-Path $targetDir 'index.html'
 $indexHtm  = Join-Path $targetDir 'index.htm'
 $indexFile = $null
@@ -163,7 +167,7 @@ if ($indexFile -and (-not $env:CI)) {
     Write-Host "Abriendo informe: $indexFile"
     Start-Process -FilePath $indexFile
 } elseif (-not $indexFile) {
-    Write-Warning "No se encontró index.html ni index.htm en $targetDir."
+    Write-Warning "No se encontrï¿½ index.html ni index.htm en $targetDir."
 }
 
 Write-Host "Proceso finalizado. Informes en: $targetDir y historial en: $historyDir"
