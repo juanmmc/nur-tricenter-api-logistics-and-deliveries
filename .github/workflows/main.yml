@@ -51,5 +51,5 @@ jobs:
             mkdir -p "${{ vars.DEPLOY_APP_DIR }}"
             cd "${{ vars.DEPLOY_APP_DIR }}"
             export IMAGE_TAG="${{ github.ref_name }}"
-            docker-compose -f docker-compose.yml pull api
-            docker-compose -f docker-compose.yml up -d --remove-orphans
+            docker compose -f docker-compose.yml pull api
+            docker compose -f docker-compose.yml up -d --remove-orphans
