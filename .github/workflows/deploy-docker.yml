@@ -24,6 +24,7 @@ jobs:
 
             APP_DIR="${{ vars.DEPLOY_APP_DIR }}"
             REPO_URL="https://github.com/juanmmc/nur-tricenter-api-logistics-and-deliveries.git"
+            DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
 
             mkdir -p "$APP_DIR"
             cd "$APP_DIR"
@@ -34,7 +35,11 @@ jobs:
             else
               cd nur-tricenter-api-logistics-and-deliveries
               git fetch --all --prune
-              git reset --hard origin/main
+              if [ -z "$DEFAULT_BRANCH" ]; then
+                DEFAULT_BRANCH="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD | sed 's@^origin/@@')"
+              fi
+              git checkout -B "$DEFAULT_BRANCH" "origin/$DEFAULT_BRANCH"
+              git reset --hard "origin/$DEFAULT_BRANCH"
               cd ..
             fi
 
