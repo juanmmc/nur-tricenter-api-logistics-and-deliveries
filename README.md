@@ -40,3 +40,9 @@ docker compose --project-name logisticsanddeliveries_webapi down
 # Diagrama de Clases
 
 ![Class diagram](./img/class_diagram.png)
+
+## Documentacion API para Frontend
+
+Para el equipo frontend, la documentacion detallada de endpoints de Drivers y Packages (metodos GET/POST, parametros requeridos, respuestas y reglas de negocio) esta en:
+
+- [Guia API Frontend - Driver y Package](./src/LogisticsAndDeliveries/LogisticsAndDeliveries.WebApi/FRONTEND_API_DRIVER_PACKAGE.md)

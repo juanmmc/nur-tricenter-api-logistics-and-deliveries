@@ -1,5 +1,6 @@
 using LogisticsAndDeliveries.Infrastructure;
 using LogisticsAndDeliveries.WebApi.Middleware;
+using Prometheus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,12 +37,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseHttpMetrics();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapMetrics();
 
 app.Run();
 
-public partial class Program { }
+public partial class Program
+{
+}
