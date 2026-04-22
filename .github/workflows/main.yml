@@ -40,6 +40,15 @@ jobs:
           source: src/docker-compose.yml
           target: ${{ vars.DEPLOY_APP_DIR }}
           strip_components: 1
+      - name: Copy monitoring configs to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          source: src/monitoring/loki-config.yml,src/monitoring/prometheus.yml,src/monitoring/promtail-config.yml
+          target: ${{ vars.DEPLOY_APP_DIR }}
+          strip_components: 1
       - name: Deploy via SSH (docker compose with release tag)
         uses: appleboy/ssh-action@v1.0.3
         with:

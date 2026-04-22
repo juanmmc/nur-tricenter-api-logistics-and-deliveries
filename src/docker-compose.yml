@@ -36,7 +36,12 @@ services:
     ports:
       - 9090:9090
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - type: bind
+        source: ./monitoring/prometheus.yml
+        target: /etc/prometheus/prometheus.yml
+        read_only: true
+        bind:
+          create_host_path: false
       - prometheus_data:/prometheus
     depends_on:
       - api
@@ -48,7 +53,12 @@ services:
     ports:
       - 3100:3100
     volumes:
-      - ./monitoring/loki-config.yml:/etc/loki/local-config.yaml:ro
+      - type: bind
+        source: ./monitoring/loki-config.yml
+        target: /etc/loki/local-config.yaml
+        read_only: true
+        bind:
+          create_host_path: false
       - loki_data:/loki
 
   promtail:
@@ -56,7 +66,12 @@ services:
     container_name: logistics_deliveries_promtail_container
     command: -config.file=/etc/promtail/config.yml
     volumes:
-      - ./monitoring/promtail-config.yml:/etc/promtail/config.yml:ro
+      - type: bind
+        source: ./monitoring/promtail-config.yml
+        target: /etc/promtail/config.yml
+        read_only: true
+        bind:
+          create_host_path: false
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
