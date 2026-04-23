@@ -4,12 +4,14 @@ using LogisticsAndDeliveries.Application.Drivers.GetDrivers;
 using LogisticsAndDeliveries.Application.Drivers.UpdateDriverLocation;
 using LogisticsAndDeliveries.WebApi.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogisticsAndDeliveries.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "AdminOrDriver")]
     public class DriverController : ControllerBase
     {
         private readonly IMediator _mediator;
