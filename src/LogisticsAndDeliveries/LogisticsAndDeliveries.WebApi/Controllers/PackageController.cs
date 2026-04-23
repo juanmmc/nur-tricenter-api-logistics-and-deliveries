@@ -9,12 +9,14 @@ using LogisticsAndDeliveries.Application.Packages.RegisterDeliveryIncident;
 using LogisticsAndDeliveries.Application.Packages.SetDeliveryOrder;
 using LogisticsAndDeliveries.WebApi.Extensions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LogisticsAndDeliveries.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Policy = "AdminOrDriver")]
     public class PackageController : ControllerBase
     {
         private readonly IMediator _mediator;
